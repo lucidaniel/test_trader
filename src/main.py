@@ -2,23 +2,21 @@ import asyncio
 import time
 import joblib
 import pandas as pd
+from sympy import symbols
 import yaml
 import logging
 import ccxt
 import os
-import symbol
 from src.api.binance_api import fetch_real_time_data, execute_trade
 from src.indicators.technical_indicators import calculate_rsi, calculate_obv, calculate_macd
 from src.initialize import initialize_app
-from utils.helpers import get_env_variable
+from src.utils.helpers import get_env_variable
 from src.utils.config_manager import ConfigManager
 from src.api.binance_api import BinanceAPI
-from src.ml.gradient_boost_classifier import GradientBoostClassifier
-from src.indicators.technical_indicators import TechnicalIndicators
-from src.utils.helpers import get_logger
+from src.ml.gradient_boost_classifier import GradientBoostClassifier, load_model, make_prediction
+from src.indicators.technical_indicators import TechnicalIndicators, process_data
+from src.utils.helpers import get_logger, execute_trade_based_on_prediction
 from typing import List, Dict
-
-initialize_app()
 
 # Get the absolute path to the directory where your script is located
 script_location = get_env_variable('SCRIPT_LOCATION')
@@ -80,5 +78,5 @@ async def analyze_symbol(symbol, timeframe='1m', limit=100):
 # Main entry point
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
-    tasks = [analyze_symbol(symbol) for symbol in symbol]
+    tasks = [analyze_symbol(symbol) for symbol in symbols]
     loop.run_until_complete(asyncio.gather(*tasks))
