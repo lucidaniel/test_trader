@@ -4,7 +4,7 @@ import logging
 class ConfigManager:
     def __init__(self, config_path):
         self.config = self.load_config(config_path)
-    self.validate_config()
+        self.validate_config()
 
     def load_config(self, config_path):
         try:
