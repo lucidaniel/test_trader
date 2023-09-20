@@ -22,7 +22,7 @@ Returns:
 Formula:
     RSI = 100 - (100 / (1 + RS))
     where RS = Average Gain / Average Loss over the window period
-   """
+    """
     try:
         delta = data['close'].diff(1)
         gain = (delta.where(delta > 0, 0)).rolling(window=window, min_periods=1).mean()
