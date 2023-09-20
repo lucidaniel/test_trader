@@ -3,42 +3,31 @@ import aiohttp
 import asyncio
 import os
 import pandas as pd
-from src.utils.helpers import setup_logging
+from src.initialize import initialize_app
 import logging
 
-def load_environment_variables():
-    load_dotenv()
-load_environment_variables()
+initialize_app()
 
-def initialize_logging():
-    setup_logging()
-initialize_logging()
-
-# Use environment variables for API keys
-api_key = os.getenv('BINANCE_API_KEY') 
+api_key = os.getenv('BINANCE_API_KEY')
 api_secret = os.getenv('BINANCE_API_SECRET')
 
-# Use environment variables for API keys
-api_key = os.getenv('BINANCE_API_KEY') 
-api_secret = os.getenv('BINANCE_API_SECRET')
-
-# Use environment variables for API keys
-api_key = os.getenv('BINANCE_API_KEY') 
-api_secret = os.getenv('BINANCE_API_SECRET')
+async def fetch_data(url, headers):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url, headers=headers) as response:
+            if response.status != 200:
+                logging.error(f"Failed to fetch data: {response.status}")
+                return None
+            return await response.json()
 
 async def fetch_historical_data(symbol, timeframe, since, limit):
     try:
         url = f"https://api.binance.com/api/v3/klines?symbol={symbol}&interval={timeframe}&startTime={since}&limit={limit}"
         headers = {'X-MBX-APIKEY': api_key}
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url, headers=headers) as response:
-                if response.status != 200:
-                    raise aiohttp.ClientError(f"Failed to fetch data: {response.status}")
-                data = await response.json()
+        data = await fetch_data(url, headers)
         logging.info(f"Fetched historical data for {symbol}.")
         return data
-    except aiohttp.ClientError as e:
-        logging.error(f"Failed to fetch historical data for {symbol}: {e}")
+    except Exception as e:
+        logging.error(f"An error occurred while fetching historical data for {symbol}: {e}")
         return None
 
 async def save_historical_data_to_csv(symbol, data):
