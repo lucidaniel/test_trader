@@ -51,11 +51,7 @@ async def fetch_current_price(symbol):
     return ticker['last']
 
 # Define trading parameters
-symbols = config['trading_pairs']  # Multiple symbols from settings.yaml
-timeframe = '1m'
-limit = 100
-
-async def analyze_symbol(symbol):
+async def analyze_symbol(symbol, timeframe='1m', limit=100):
     model = load_model(symbol)
     while True:
         try:
@@ -66,10 +62,16 @@ async def analyze_symbol(symbol):
         except KeyboardInterrupt:
             logging.info("Stopping the bot.")
             break
-        except Exception as e:
-            logging.error(f"An error occurred: {e}")
+        except ccxt.NetworkError as e:
+            logging.error(f"Network error: {e}")
             await asyncio.sleep(60)
-
+        except ccxt.ExchangeError as e:
+            logging.error(f"Exchange error: {e}")
+            await asyncio.sleep(60)
+        except Exception as e:
+            logging.error(f"An unexpected error occurred: {e}")
+            await asyncio.sleep(60)
+            
 # Main entry point
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
