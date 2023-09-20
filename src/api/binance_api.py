@@ -4,7 +4,6 @@ import asyncio
 import os
 import pandas as pd
 from src.initialize import initialize_app
-import logging
 
 initialize_app()
 

@@ -1,5 +1,8 @@
 import yaml
 import logging
+from src.initialize import initialize_app
+
+initialize_app()
 
 class ConfigManager:
     def __init__(self, config_path):

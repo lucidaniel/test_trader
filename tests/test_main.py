@@ -10,9 +10,9 @@ class TestMain(asynctest.TestCase):
     async def test_invalid_symbol(self):
         # TODO: Add a test case for invalid symbols
     
-         def test_fetch_current_price(self):
-           assert True  # Placeholder
-           assert True  # Placeholder
+        async def test_fetch_current_price(self):
+            assert True  # Placeholder
+            assert True  # Placeholder
 
 if __name__ == '__main__':
     asynctest.main()

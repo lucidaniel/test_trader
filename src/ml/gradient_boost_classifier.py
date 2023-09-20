@@ -6,12 +6,9 @@ from sklearn.metrics import accuracy_score
 import pandas as pd
 import joblib
 from src.utils.config_manager import ConfigManager
-from src.utils.helpers import setup_logging, get_env_variable
-import logging
+from src.initialize import initialize_app
 
-def initialize_logging():
-    setup_logging()
-initialize_logging()
+initialize_app()
 
 # Initialize Config Manager for hyperparameters
 config_manager = ConfigManager('config/hyperparameters.yaml')

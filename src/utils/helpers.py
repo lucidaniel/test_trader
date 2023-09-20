@@ -1,5 +1,8 @@
 import logging
 import os
+from src.initialize import initialize_app
+
+initialize_app()
 
 def setup_logging(log_level="INFO", log_file="logs/trading_bot.log"):
     """

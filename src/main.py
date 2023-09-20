@@ -8,12 +8,9 @@ import ccxt
 import os
 from src.api.binance_api import fetch_real_time_data, execute_trade
 from src.indicators.technical_indicators import calculate_rsi, calculate_obv, calculate_macd
-from src.utils.helpers import setup_logging, get_env_variable
-from src.ml.gradient_boost_classifier import load_model
+from src.initialize import initialize_app
 
-def initialize_logging():
-    setup_logging()
-initialize_logging()
+initialize_app()
 
 # Get the absolute path to the directory where your script is located
 script_location = get_env_variable('SCRIPT_LOCATION')

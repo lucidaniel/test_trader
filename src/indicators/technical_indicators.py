@@ -1,11 +1,8 @@
 import pandas as pd
 import numpy as np
-from src.utils.helpers import setup_logging
-import logging
+from src.initialize import initialize_app
 
-def initialize_logging():
-    setup_logging()
-initialize_logging()
+initialize_app()
 
 def calculate_rsi(data, window):
     
