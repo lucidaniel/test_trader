@@ -3,8 +3,9 @@ import numpy as np
 from src.utils.helpers import setup_logging
 import logging
 
-# Initialize logging
-setup_logging()
+def initialize_logging():
+    setup_logging()
+initialize_logging()
 
 def calculate_rsi(data, window):
     """
@@ -20,8 +21,11 @@ def calculate_rsi(data, window):
 
         logging.info("RSI calculated successfully.")
         return rsi
+    except KeyError as e:
+        logging.error(f"Missing key in data: {e}")
+        return pd.Series(dtype=float)
     except Exception as e:
-        logging.error(f"Failed to calculate RSI: {e}")
+        logging.error(f"An unexpected error occurred: {e}")
         return pd.Series(dtype=float)
 
 def calculate_obv(data):
@@ -32,9 +36,12 @@ def calculate_obv(data):
         obv = (np.sign(data['close'].diff(1).fillna(0)) * data['volume']).cumsum()
         logging.info("OBV calculated successfully.")
         return obv
+    except KeyError as e:
+        logging.error(f"Missing key in data: {e}")
+        return pd.Series(dtype=float)
     except Exception as e:
-        logging.error(f"Failed to calculate OBV: {e}")
-        return None
+        logging.error(f"An unexpected error occurred: {e}")
+        return pd.Series(dtype=float)
 
 def calculate_macd(data, short_window=12, long_window=26, signal_window=9):
     """
