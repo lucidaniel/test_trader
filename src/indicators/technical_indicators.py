@@ -8,9 +8,21 @@ def initialize_logging():
 initialize_logging()
 
 def calculate_rsi(data, window):
+    
     """
-    Calculate the Relative Strength Index (RSI) for a given data frame.
-    """
+Calculate the Relative Strength Index (RSI) for a given data frame.
+
+Parameters:
+    data (pd.DataFrame): The input data frame containing 'close' prices.
+    window (int): The window size for calculating RSI.
+    
+Returns:
+    pd.Series: The calculated RSI values.
+    
+Formula:
+    RSI = 100 - (100 / (1 + RS))
+    where RS = Average Gain / Average Loss over the window period
+   """
     try:
         delta = data['close'].diff(1)
         gain = (delta.where(delta > 0, 0)).rolling(window=window, min_periods=1).mean()
@@ -23,6 +35,12 @@ def calculate_rsi(data, window):
         return rsi
     except KeyError as e:
         logging.error(f"Missing key in data: {e}")
+        return pd.Series(dtype=float)
+    except KeyError as e:
+        logging.error(f"Missing key in data: {e}")
+        return pd.Series(dtype=float)
+    except ZeroDivisionError as e:
+        logging.error(f"Division by zero: {e}")
         return pd.Series(dtype=float)
     except Exception as e:
         logging.error(f"An unexpected error occurred: {e}")
