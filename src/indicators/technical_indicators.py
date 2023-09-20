@@ -1,3 +1,4 @@
+import logging
 import pandas as pd
 import numpy as np
 from src.initialize import initialize_app

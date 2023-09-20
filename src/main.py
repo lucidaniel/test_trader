@@ -9,6 +9,8 @@ import os
 from src.api.binance_api import fetch_real_time_data, execute_trade
 from src.indicators.technical_indicators import calculate_rsi, calculate_obv, calculate_macd
 from src.initialize import initialize_app
+import symbol
+from utils.helpers import get_env_variable
 
 initialize_app()
 
@@ -72,5 +74,5 @@ async def analyze_symbol(symbol, timeframe='1m', limit=100):
 # Main entry point
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
-    tasks = [analyze_symbol(symbol) for symbol in symbols]
+    tasks = [analyze_symbol(symbol) for symbol in symbol]
     loop.run_until_complete(asyncio.gather(*tasks))

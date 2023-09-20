@@ -7,6 +7,9 @@ import pandas as pd
 import joblib
 from src.utils.config_manager import ConfigManager
 from src.initialize import initialize_app
+from sklearn.metrics import f1_score
+import logging
+from utils.helpers import get_env_variable
 
 initialize_app()
 
@@ -29,6 +32,7 @@ def get_param_grid():
 
 def train_model(data, features, target):
     try:
+        param_grid = get_param_grid()  # Define param_grid
         X = data[features]
         y = data[target]
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -41,29 +45,16 @@ def train_model(data, features, target):
         y_pred = best_clf.predict(X_test)
         accuracy = accuracy_score(y_test, y_pred)
 
-        f1_score = f1_score(y_test, y_pred)
-        logging.info(f"Model trained with F1-score: {f1_score}")
+        f1 = f1_score(y_test, y_pred)  # Corrected variable name
+        logging.info(f"Model trained with F1-score: {f1}")
 
-        # Save the model
         joblib.dump(best_clf, model_file_path)
 
         return best_clf, accuracy
-    except ValueError as e:
-        logging.error(f"Invalid data for training: {e}")
-        return None, None
-    except sklearn.exceptions.NotFittedError as e:
-        logging.error(f"Model not fitted: {e}")
-        return None, None
-    except joblib.MyEstimatorError as e:  # Replace with actual joblib exceptions
-        logging.error(f"Joblib error: {e}")
-        return None, None
-    except FileNotFoundError as e:
-        logging.error(f"File not found: {e}")
-        return None, None
     except Exception as e:
-        logging.error(f"An unexpected error occurred: {e}")
+        logging.error(f"An error occurred: {e}")
         return None, None
-
+    
 def load_model(symbol):
     model_file = f"{symbol.replace('/', '_').lower()}_gradient_boost_model.pkl"
     model_path = os.path.join(script_location, '..', '..', 'models', model_file)
