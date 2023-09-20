@@ -11,8 +11,9 @@ from src.indicators.technical_indicators import calculate_rsi, calculate_obv, ca
 from src.utils.helpers import setup_logging, get_env_variable
 from src.ml.gradient_boost_classifier import load_model
 
-# Initialize logging
-setup_logging()
+def initialize_logging():
+    setup_logging()
+initialize_logging()
 
 # Get the absolute path to the directory where your script is located
 script_location = get_env_variable('SCRIPT_LOCATION')
@@ -20,27 +21,29 @@ script_location = get_env_variable('SCRIPT_LOCATION')
 # Build the absolute path to your settings.yaml file
 config_file_path = os.path.join(script_location, 'config', 'settings.yaml')
 
-try:
-    with open(config_file_path, 'r') as stream:
-        config = yaml.safe_load(stream)
-        logging.info("Loaded settings from config file.")
-except FileNotFoundError:
-    logging.error("settings.yaml not found.")
-    raise
-except Exception as e:
-    logging.error(f"Failed to load config file: {e}")
-    raise
+def load_config(config_file_path):
+    try:
+        with open(config_file_path, 'r') as stream:
+            return yaml.safe_load(stream)
+    except FileNotFoundError:
+        logging.error("settings.yaml not found.")
+        raise
+    except Exception as e:
+        logging.error(f"Failed to load config file: {e}")
+        raise
+config = load_config(config_file_path)
 
 # Initialize Binance API
-try:
-    binance = ccxt.binance({
-        'apiKey': config['binance']['api_key'],
-        'secret': config['binance']['api_secret']
-    })
-    logging.info("Initialized Binance API.")
-except Exception as e:
-    logging.error(f"Failed to initialize Binance API: {e}")
-    raise
+def initialize_binance_api(config):
+    try:
+        return ccxt.binance({
+            'apiKey': config['binance']['api_key'],
+            'secret': config['binance']['api_secret']
+        })
+    except Exception as e:
+        logging.error(f"Failed to initialize Binance API: {e}")
+        raise
+binance = initialize_binance_api(config)
 
 # Function to fetch current price
 async def fetch_current_price(symbol):
