@@ -4,11 +4,14 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import accuracy_score
 import pandas as pd
 import joblib
-import logging
-from src.utils.helpers import setup_logging, get_env_variable  # Absolute import
+from src.utils.config_manager import ConfigManager
+from src.utils.helpers import setup_logging, get_env_variable
 
 # Initialize logging
 setup_logging()
+
+# Initialize Config Manager for hyperparameters
+config_manager = ConfigManager('config/hyperparameters.yaml')
 
 # Get the absolute path to the directory where your script is located
 script_location = get_env_variable('SCRIPT_LOCATION')

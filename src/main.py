@@ -3,6 +3,7 @@ import time
 import joblib
 import pandas as pd
 import yaml
+from src.utils.config_manager import ConfigManager
 import logging
 import ccxt
 import os
@@ -13,6 +14,9 @@ from src.ml.gradient_boost_classifier import load_model
 
 # Initialize logging
 setup_logging()
+
+# Initialize Config Manager
+config_manager = ConfigManager('config/settings.yaml')
 
 # Get the absolute path to the directory where your script is located
 script_location = get_env_variable('SCRIPT_LOCATION')

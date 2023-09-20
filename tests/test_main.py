@@ -1,9 +1,9 @@
 import asynctest
-from src.main import fetch_current_price
+from src.main import fetch_current_price, analyze_symbol
 
 class TestMain(asynctest.TestCase):
 
-    async def test_fetch_current_price(self):
+    async def test_analyze_symbol(self):
         symbols = ['BTC/USDT', 'ETH/USDT', 'SOL/USDT']
         
         # Mocking the API call to return a float (e.g., 50000.0)
