@@ -40,9 +40,6 @@ async def fetch_historical_data(symbol, timeframe, since, limit):
     except aiohttp.ClientError as e:
         logging.error(f"Failed to fetch historical data for {symbol}: {e}")
         return None
-    except Exception as e:
-        logging.error(f"An unexpected error occurred: {e}")
-        return None
 
 async def save_historical_data_to_csv(symbol, data):
     try:
@@ -55,6 +52,17 @@ async def save_historical_data_to_csv(symbol, data):
         logging.error(f"Failed to save historical data to CSV: {e}")
         return None
 
+async def save_historical_data_to_csv(symbol, data):
+    try:
+        df = pd.DataFrame(data, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
+        df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
+        historical_data_path = os.path.join('data', 'historical_data', f"{symbol}_historical_data.csv")
+        df.to_csv(historical_data_path, index=False)
+        logging.info(f"Saved historical data to CSV for {symbol}.")
+    except Exception as e:
+        logging.error(f"Failed to save historical data to CSV: {e}")
+        return data
+    
 async def fetch_real_time_data(symbol, timeframe, limit):
     url = f"https://api.binance.com/api/v3/klines?symbol={symbol}&interval={timeframe}&limit={limit}"
     headers = {'X-MBX-APIKEY': api_key}
