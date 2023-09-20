@@ -4,6 +4,7 @@ import asyncio
 import os
 import pandas as pd
 from src.utils.helpers import setup_logging
+import logging
 
 # Load environment variables
 load_dotenv()

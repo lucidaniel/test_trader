@@ -6,6 +6,7 @@ import pandas as pd
 import joblib
 from src.utils.config_manager import ConfigManager
 from src.utils.helpers import setup_logging, get_env_variable
+import logging
 
 # Initialize logging
 setup_logging()
