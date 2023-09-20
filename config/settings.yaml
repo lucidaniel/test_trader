@@ -1,0 +1,11 @@
+binance:
+  api_key: "YOUR_API_KEY_HERE"
+  api_secret: "YOUR_API_SECRET_HERE"
+  
+trading_pairs:
+  - BTC/USDT
+  - ETH/USDT
+  - SOL/USDT
+  
+other_settings:
+  # Add other settings as needed
