@@ -1,4 +1,5 @@
 import os
+import sklearn
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import accuracy_score
@@ -52,6 +53,15 @@ def train_model(data, features, target):
         return best_clf, accuracy
     except ValueError as e:
         logging.error(f"Invalid data for training: {e}")
+        return None, None
+    except sklearn.exceptions.NotFittedError as e:
+        logging.error(f"Model not fitted: {e}")
+        return None, None
+    except joblib.MyEstimatorError as e:  # Replace with actual joblib exceptions
+        logging.error(f"Joblib error: {e}")
+        return None, None
+    except FileNotFoundError as e:
+        logging.error(f"File not found: {e}")
         return None, None
     except Exception as e:
         logging.error(f"An unexpected error occurred: {e}")
