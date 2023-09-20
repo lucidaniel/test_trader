@@ -68,10 +68,7 @@ async def execute_trade(symbol, side, amount, price):
     url = f"https://api.binance.com/api/v3/order"
     headers = {
         'X-MBX-APIKEY': api_key,
-    if 'trading_pairs' not in self.config:
-        logging.error("Missing 'trading_pairs' section in config.")
-        raise ValueError("Invalid configuration.")
-    # Add more validation logic based on your specific needs
+        # Add other necessary headers for authentication
     }
     params = {
         'symbol': symbol,

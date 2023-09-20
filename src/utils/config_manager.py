@@ -23,4 +23,8 @@ class ConfigManager:
         if 'binance' not in self.config:
             logging.error("Missing 'binance' section in config.")
             raise ValueError("Invalid configuration.")
-            # Add more validation logic based on your specific needs
+        # Example validation for trading pairs
+        if 'trading_pairs' not in self.config:
+            logging.error("Missing 'trading_pairs' section in config.")
+            raise ValueError("Invalid configuration.")
+        # Add further validation logic based on your specific needs
