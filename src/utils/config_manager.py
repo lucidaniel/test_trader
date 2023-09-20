@@ -4,6 +4,7 @@ import logging
 class ConfigManager:
     def __init__(self, config_path):
         self.config = self.load_config(config_path)
+    self.validate_config()
 
     def load_config(self, config_path):
         try:
@@ -19,5 +20,7 @@ class ConfigManager:
             raise
 
     def validate_config(self):
-        # Add validation logic here
-        pass
+        if 'binance' not in self.config:
+            logging.error("Missing 'binance' section in config.")
+            raise ValueError("Invalid configuration.")
+            # Add more validation logic based on your specific needs
