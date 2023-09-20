@@ -1,15 +1,23 @@
+from dotenv import load_dotenv
 import aiohttp
 import asyncio
 import os
 import pandas as pd
-import logging
+from src.utils.helpers import setup_logging
+
+# Load environment variables
+load_dotenv()
 
 # Initialize logging
-logging.basicConfig(level=logging.INFO)
+setup_logging()
 
 # Use environment variables for API keys
-api_key = os.environ.get('BINANCE_API_KEY')
-api_secret = os.environ.get('BINANCE_API_SECRET')  # Make sure to use this securely
+api_key = os.getenv('BINANCE_API_KEY') 
+api_secret = os.getenv('BINANCE_API_SECRET')
+
+# Use environment variables for API keys
+api_key = os.getenv('BINANCE_API_KEY') 
+api_secret = os.getenv('BINANCE_API_SECRET')
 
 async def fetch_historical_data(symbol, timeframe, since, limit):
     try:
