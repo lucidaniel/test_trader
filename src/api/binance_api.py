@@ -19,6 +19,10 @@ api_secret = os.getenv('BINANCE_API_SECRET')
 api_key = os.getenv('BINANCE_API_KEY') 
 api_secret = os.getenv('BINANCE_API_SECRET')
 
+# Use environment variables for API keys
+api_key = os.getenv('BINANCE_API_KEY') 
+api_secret = os.getenv('BINANCE_API_SECRET')
+
 async def fetch_historical_data(symbol, timeframe, since, limit):
     try:
         url = f"https://api.binance.com/api/v3/klines?symbol={symbol}&interval={timeframe}&startTime={since}&limit={limit}"

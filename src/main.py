@@ -3,7 +3,6 @@ import time
 import joblib
 import pandas as pd
 import yaml
-from src.utils.config_manager import ConfigManager
 import logging
 import ccxt
 import os
@@ -14,9 +13,6 @@ from src.ml.gradient_boost_classifier import load_model
 
 # Initialize logging
 setup_logging()
-
-# Initialize Config Manager
-config_manager = ConfigManager('config/settings.yaml')
 
 # Get the absolute path to the directory where your script is located
 script_location = get_env_variable('SCRIPT_LOCATION')
@@ -57,37 +53,13 @@ timeframe = '1m'
 limit = 100
 
 async def analyze_symbol(symbol):
-    model = load_model(symbol)  # Load the appropriate model for each symbol
+    model = load_model(symbol)
     while True:
         try:
-            # Fetch real-time data
             ohlcv = await fetch_real_time_data(symbol, timeframe, limit)
-            data = pd.DataFrame(ohlcv, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
-            logging.info(f"Fetched real-time data for {symbol}.")
-            
-            # Calculate Indicators
-            data['rsi'] = calculate_rsi(data, 14)
-            data['obv'] = calculate_obv(data)
-            data['macd'], data['signal_line'] = calculate_macd(data)
-            
-            # Prepare feature vector for prediction
-            latest_data = data.iloc[-1]
-            X = [latest_data['rsi'], latest_data['obv'], latest_data['macd'], latest_data['signal_line']]
-            
-            # Make a prediction
-            prediction = model.predict([X])
-            logging.info(f"Made a prediction for {symbol}: {prediction[0]}")
-            
-            # Execute trade based on prediction
-            if prediction == 1:
-                logging.info(f"Executing buy order for {symbol}.")
-                await execute_trade(symbol, 'buy', 0.01, latest_data['close'])
-            elif prediction == 0:
-                logging.info(f"Executing sell order for {symbol}.")
-                await execute_trade(symbol, 'sell', 0.01, latest_data['close'])
-            
-            await asyncio.sleep(60)
-            
+            data = process_data(ohlcv)
+            prediction = make_prediction(model, data)
+            await execute_trade_based_on_prediction(prediction, symbol, data)
         except KeyboardInterrupt:
             logging.info("Stopping the bot.")
             break

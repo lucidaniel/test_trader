@@ -19,17 +19,14 @@ def setup_logging(log_level="INFO", log_file="logs/trading_bot.log"):
     )
 
 def get_env_variable(var_name):
-    """
-    Fetches an environment variable and exits if not found.
-    
-    Parameters:
-        var_name (str): The name of the environment variable.
-        
-    Returns:
-        str: The value of the environment variable.
-    """
     try:
-        return os.environ[var_name]
+        value = os.environ[var_name]
+        validate_env_variable(var_name, value)  # New function to validate the value
+        return value
     except KeyError:
         logging.error(f"Environment variable {var_name} not set.")
         exit(1)
+
+def validate_env_variable(var_name, value):
+    # Add validation logic here
+    pass

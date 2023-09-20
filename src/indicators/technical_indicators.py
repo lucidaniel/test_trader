@@ -21,7 +21,7 @@ def calculate_rsi(data, window):
         return rsi
     except Exception as e:
         logging.error(f"Failed to calculate RSI: {e}")
-        return None
+        return pd.Series(dtype=float)
 
 def calculate_obv(data):
     """

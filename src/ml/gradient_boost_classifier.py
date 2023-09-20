@@ -40,7 +40,8 @@ def train_model(data, features, target):
         y_pred = best_clf.predict(X_test)
         accuracy = accuracy_score(y_test, y_pred)
 
-        logging.info(f"Model trained with accuracy: {accuracy}")
+        f1_score = f1_score(y_test, y_pred)
+        logging.info(f"Model trained with F1-score: {f1_score}")
 
         # Save the model
         joblib.dump(best_clf, model_file_path)
