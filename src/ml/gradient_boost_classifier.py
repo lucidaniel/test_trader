@@ -8,8 +8,9 @@ from src.utils.config_manager import ConfigManager
 from src.utils.helpers import setup_logging, get_env_variable
 import logging
 
-# Initialize logging
-setup_logging()
+def initialize_logging():
+    setup_logging()
+initialize_logging()
 
 # Initialize Config Manager for hyperparameters
 config_manager = ConfigManager('config/hyperparameters.yaml')
@@ -21,11 +22,12 @@ script_location = get_env_variable('SCRIPT_LOCATION')
 model_file_path = os.path.join(script_location, 'models', 'gradient_boost_model.pkl')
 
 # Hyperparameters grid for GridSearchCV
-param_grid = {
-    'n_estimators': [50, 100, 200],
-    'learning_rate': [0.01, 0.1, 0.2],
-    'max_depth': [3, 4, 5]
-}
+def get_param_grid():
+    return {
+        'n_estimators': [50, 100, 200],
+        'learning_rate': [0.01, 0.1, 0.2],
+        'max_depth': [3, 4, 5]
+    }
 
 def train_model(data, features, target):
     try:
@@ -48,8 +50,11 @@ def train_model(data, features, target):
         joblib.dump(best_clf, model_file_path)
 
         return best_clf, accuracy
+    except ValueError as e:
+        logging.error(f"Invalid data for training: {e}")
+        return None, None
     except Exception as e:
-        logging.error(f"Failed to train the model: {e}")
+        logging.error(f"An unexpected error occurred: {e}")
         return None, None
 
 def load_model(symbol):
