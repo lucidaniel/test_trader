@@ -1,11 +1,21 @@
-binance:
-  api_key: "YOUR_API_KEY_HERE"
-  api_secret: "YOUR_API_SECRET_HERE"
-  
+# Trading Bot Configuration Settings
+
+# Trading Pairs to Monitor
 trading_pairs:
   - BTC/USDT
   - ETH/USDT
   - SOL/USDT
-  
-other_settings:
-  # Add other settings as needed
+
+# Time Interval for Data Fetching
+time_interval: "1m"
+
+# Number of Historical Data Points to Fetch
+data_points: 100
+
+# Leverage for Trading
+leverage: 5
+
+# Trading Frequency in Seconds
+trading_frequency: 60
+
+# Other non-sensitive settings can be added here

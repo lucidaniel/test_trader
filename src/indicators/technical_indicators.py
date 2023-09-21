@@ -5,21 +5,9 @@ from src.initialize import initialize_app
 
 initialize_app()
 
-def calculate_rsi(data, window):
-    
+async def calculate_rsi(data, window):
     """
-Calculate the Relative Strength Index (RSI) for a given data frame.
-
-Parameters:
-    data (pd.DataFrame): The input data frame containing 'close' prices.
-    window (int): The window size for calculating RSI.
-    
-Returns:
-    pd.Series: The calculated RSI values.
-    
-Formula:
-    RSI = 100 - (100 / (1 + RS))
-    where RS = Average Gain / Average Loss over the window period
+    Calculate Relative Strength Index (RSI) for a given data frame.
     """
     try:
         delta = data['close'].diff(1)
@@ -34,9 +22,6 @@ Formula:
     except KeyError as e:
         logging.error(f"Missing key in data: {e}")
         return pd.Series(dtype=float)
-    except KeyError as e:
-        logging.error(f"Missing key in data: {e}")
-        return pd.Series(dtype=float)
     except ZeroDivisionError as e:
         logging.error(f"Division by zero: {e}")
         return pd.Series(dtype=float)
@@ -44,7 +29,7 @@ Formula:
         logging.error(f"An unexpected error occurred: {e}")
         return pd.Series(dtype=float)
 
-def calculate_obv(data):
+async def calculate_obv(data):
     """
     Calculate On-Balance Volume (OBV) for a given data frame.
     """
@@ -59,7 +44,7 @@ def calculate_obv(data):
         logging.error(f"An unexpected error occurred: {e}")
         return pd.Series(dtype=float)
 
-def calculate_macd(data, short_window=12, long_window=26, signal_window=9):
+async def calculate_macd(data, short_window=12, long_window=26, signal_window=9):
     """
     Calculate Moving Average Convergence Divergence (MACD) for a given data frame.
     """

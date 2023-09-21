@@ -1,67 +1,60 @@
-import os
-import sklearn
-from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.metrics import accuracy_score
-import pandas as pd
 import joblib
-from src.utils.config_manager import ConfigManager
-from src.initialize import initialize_app
-from sklearn.metrics import f1_score
-import logging
-from utils.helpers import get_env_variable
+import pandas as pd
+from sklearn.ensemble import GradientBoostingClassifier
 
-initialize_app()
-
-# Initialize Config Manager for hyperparameters
-config_manager = ConfigManager('config/hyperparameters.yaml')
-
-# Get the absolute path to the directory where your script is located
-script_location = get_env_variable('SCRIPT_LOCATION')
-
-# Build the absolute path to your model file
-model_file_path = os.path.join(script_location, 'models', 'gradient_boost_model.pkl')
-
-# Hyperparameters grid for GridSearchCV
-def get_param_grid():
-    return {
-        'n_estimators': [50, 100, 200],
-        'learning_rate': [0.01, 0.1, 0.2],
-        'max_depth': [3, 4, 5]
-    }
-
-def train_model(data, features, target):
-    try:
-        param_grid = get_param_grid()  # Define param_grid
-        X = data[features]
-        y = data[target]
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-        clf = GradientBoostingClassifier()
-        grid_search = GridSearchCV(estimator=clf, param_grid=param_grid, cv=3)
-        grid_search.fit(X_train, y_train)
-
-        best_clf = grid_search.best_estimator_
-        y_pred = best_clf.predict(X_test)
-        accuracy = accuracy_score(y_test, y_pred)
-
-        f1 = f1_score(y_test, y_pred)  # Corrected variable name
-        logging.info(f"Model trained with F1-score: {f1}")
-
-        joblib.dump(best_clf, model_file_path)
-
-        return best_clf, accuracy
-    except Exception as e:
-        logging.error(f"An error occurred: {e}")
-        return None, None
+async def load_model(model_path="models/gradient_boost_model.pkl"):
+    """
+    Asynchronously load the pre-trained Gradient Boosting model.
     
-def load_model(symbol):
-    model_file = f"{symbol.replace('/', '_').lower()}_gradient_boost_model.pkl"
-    model_path = os.path.join(script_location, '..', '..', 'models', model_file)
-    try:
-        clf = joblib.load(model_path)
-        logging.info(f"Model for {symbol} loaded successfully.")
-        return clf
-    except Exception as e:
-        logging.error(f"Failed to load the model for {symbol}: {e}")
-        return None
+    Parameters:
+    - model_path (str): The path to the saved model file. Default is "models/gradient_boost_model.pkl".
+    
+    Returns:
+    - GradientBoostingClassifier: The loaded model.
+    """
+    return joblib.load(model_path)
+
+async def make_prediction(model, data):
+    """
+    Asynchronously make a trading prediction based on the given data.
+    
+    Parameters:
+    - model (GradientBoostingClassifier): The pre-trained model.
+    - data (DataFrame): The processed trading data.
+    
+    Returns:
+    - int: The trading prediction (1 for buy, 0 for hold, -1 for sell).
+    """
+    features = data[-1:].drop("label", axis=1)
+    return model.predict(features)[0]
+
+async def train_model(data, labels, model_path="models/gradient_boost_model.pkl"):
+    """
+    Asynchronously train a new Gradient Boosting model.
+    
+    Parameters:
+    - data (DataFrame): The training data.
+    - labels (Series): The training labels.
+    - model_path (str): The path to save the trained model. Default is "models/gradient_boost_model.pkl".
+    
+    Returns:
+    - GradientBoostingClassifier: The trained model.
+    """
+    model = GradientBoostingClassifier()
+    model.fit(data, labels)
+    joblib.dump(model, model_path)
+    return model
+
+if __name__ == "__main__":
+    import asyncio
+
+    async def main():
+        # Test the GradientBoostClassifier functions if this script is run directly.
+        # For demonstration purposes, using dummy data and labels.
+        data = pd.DataFrame({"feature1": [1, 2, 3], "feature2": [4, 5, 6], "label": [1, 0, -1]})
+        labels = data["label"]
+        model = await train_model(data.drop("label", axis=1), labels)
+        prediction = await make_prediction(model, data)
+        print(f"Prediction: {prediction}")
+
+    asyncio.run(main())
