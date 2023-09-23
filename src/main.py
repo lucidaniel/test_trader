@@ -1,19 +1,12 @@
 import asyncio
-import pandas as pd
 import yaml
 import logging
 import os
 import ccxt
-from src.api.binance_api import fetch_real_time_data, execute_trade
-from src.indicators.technical_indicators import calculate_rsi, calculate_obv, calculate_macd
 from src.initialize import initialize_app
-from src.utils.helpers import get_env_variable
 from src.utils.config_manager import ConfigManager
 from src.api.binance_api import BinanceAPI
-from src.ml.gradient_boost_classifier import GradientBoostClassifier, load_model, make_prediction
-from src.indicators.technical_indicators import TechnicalIndicators, process_data
-from src.utils.helpers import get_logger, execute_trade_based_on_prediction
-from typing import List, Dict
+from src.ml.gradient_boost_classifier import load_model
 
 # Initialize the application
 initialize_app()
