@@ -5,7 +5,7 @@ from src.initialize import initialize_app
 
 initialize_app()
 
-async def calculate_rsi(data, window):
+def calculate_rsi(data, window):
     """
     Calculate Relative Strength Index (RSI) for a given data frame.
     """
@@ -29,7 +29,7 @@ async def calculate_rsi(data, window):
         logging.error(f"An unexpected error occurred: {e}")
         return pd.Series(dtype=float)
 
-async def calculate_obv(data):
+def calculate_obv(data):
     """
     Calculate On-Balance Volume (OBV) for a given data frame.
     """
@@ -44,7 +44,7 @@ async def calculate_obv(data):
         logging.error(f"An unexpected error occurred: {e}")
         return pd.Series(dtype=float)
 
-async def calculate_macd(data, short_window=12, long_window=26, signal_window=9):
+def calculate_macd(data, short_window=12, long_window=26, signal_window=9):
     """
     Calculate Moving Average Convergence Divergence (MACD) for a given data frame.
     """
