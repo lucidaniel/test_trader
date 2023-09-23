@@ -1,3 +1,2 @@
 .env
-structure.ini
 ./src/utils/*pycache*

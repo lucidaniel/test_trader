@@ -1,5 +1,3 @@
-# Trading Bot Configuration Settings
-
 # Trading Pairs to Monitor
 trading_pairs:
   - BTC/USDT
@@ -17,5 +15,3 @@ leverage: 5
 
 # Trading Frequency in Seconds
 trading_frequency: 60
-
-# Other non-sensitive settings can be added here
