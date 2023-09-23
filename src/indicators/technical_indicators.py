@@ -1,9 +1,6 @@
 import logging
 import pandas as pd
 import numpy as np
-from src.initialize import initialize_app
-
-initialize_app()
 
 def calculate_rsi(data, window):
     """
