@@ -1,5 +1,5 @@
 # Trading Pairs to Monitor
-trading_pairs:
+symbols:
   - BTC/USDT
   - ETH/USDT
   - SOL/USDT
