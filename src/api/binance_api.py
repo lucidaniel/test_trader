@@ -16,29 +16,23 @@ API_KEY = os.getenv("BINANCE_API_KEY")
 API_SECRET = os.getenv("BINANCE_API_SECRET")
 
 async def fetch_data(url, headers):
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url, headers=headers) as response:
-            if response.status != 200:
-                logging.error(f"Failed to fetch data: {response.status}")
-                return None
-            return await response.json()
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, headers=headers) as response:
+                if response.status != 200:
+                    logging.error(f"Failed to fetch data: {response.status}")
+                    return None
+                return await response.json()
+    except Exception as e:
+        logging.error(f"An error occurred while fetching data: {e}")
+        return None
 
 async def fetch_historical_data(symbol, timeframe, since, limit):
-    try:
-        url = f"https://api.binance.com/api/v3/klines?symbol={symbol}&interval={timeframe}&startTime={since}&limit={limit}"
-        headers = {'X-MBX-APIKEY': API_KEY}
-        data = await fetch_data(url, headers)
-        logging.info(f"Fetched historical data for {symbol}.")
-        return data
-    except ccxt.NetworkError as e:
-        logging.error(f"Network error while fetching historical data for {symbol}: {e}")
-        return None
-    except ccxt.ExchangeError as e:
-        logging.error(f"Exchange error while fetching historical data for {symbol}: {e}")
-        return None
-    except Exception as e:
-        logging.error(f"An error occurred while fetching historical data for {symbol}: {e}")
-        return None
+    url = f"https://api.binance.com/api/v3/klines?symbol={symbol}&interval={timeframe}&startTime={since}&limit={limit}"
+    headers = {'X-MBX-APIKEY': API_KEY}
+    data = await fetch_data(url, headers)
+    logging.info(f"Fetched historical data for {symbol}.")
+    return data
 
 async def save_historical_data_to_csv(symbol, data):
     try:
@@ -49,23 +43,13 @@ async def save_historical_data_to_csv(symbol, data):
         logging.info(f"Saved historical data to CSV for {symbol}.")
     except Exception as e:
         logging.error(f"Failed to save historical data to CSV: {e}")
-        return None
-    
+
 async def fetch_real_time_data(symbol, timeframe, limit):
-    try:
-        url = f"https://api.binance.com/api/v3/klines?symbol={symbol}&interval={timeframe}&limit={limit}"
-        headers = {'X-MBX-APIKEY': API_KEY}
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url, headers=headers) as response:
-                data = await response.json()
-                logging.info(f"Fetched real-time data for {symbol}.")
-                return data
-    except ccxt.NetworkError as e:
-        logging.error(f"Network error while fetching real-time data for {symbol}: {e}")
-        return None
-    except ccxt.ExchangeError as e:
-        logging.error(f"Exchange error while fetching real-time data for {symbol}: {e}")
-        return None
+    url = f"https://api.binance.com/api/v3/klines?symbol={symbol}&interval={timeframe}&limit={limit}"
+    headers = {'X-MBX-APIKEY': API_KEY}
+    data = await fetch_data(url, headers)
+    logging.info(f"Fetched real-time data for {symbol}.")
+    return data
 
 async def execute_trade(symbol, side, amount, price):
     try:
@@ -92,4 +76,4 @@ async def execute_trade(symbol, side, amount, price):
         return None
     except ccxt.ExchangeError as e:
         logging.error(f"Exchange error while executing trade for {symbol}: {e}")
-        return None        
+        return None
