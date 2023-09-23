@@ -2,13 +2,14 @@ import joblib
 import pandas as pd
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.model_selection import train_test_split
-from main import load_config
+from src.utils.helpers import get_env_variable
+from src.main import load_config
 
 class GradientBoostingModel:
     def __init__(self, config_path='../config/settings.yaml'):
         self.config = load_config(config_path)
         self.data_path = self.config['data_path']  # Assuming you have a 'data_path' in your config
-        self.model_path = '../models/gradient_boost_model.pkl'
+        self.model_path = get_env_variable("MODEL_PATH") or '../models/gradient_boost_model.pkl'
         self.model = GradientBoostingClassifier()
 
     def load_data(self):
@@ -30,7 +31,7 @@ class GradientBoostingModel:
     def load(self):
         self.model = joblib.load(self.model_path)
 
-    async def predict(self, data):
+    def predict(self, data):
         features = data[-1:].drop("label", axis=1)
         return self.model.predict(features)[0]
 
