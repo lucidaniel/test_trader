@@ -37,3 +37,13 @@ class ConfigManager:
             if pair not in valid_pairs:
                 logging.error(f"Invalid trading pair: {pair}")
                 raise ValueError(f"Invalid trading pair: {pair}")
+        # Validate time_interval
+        valid_intervals = ["1m", "5m", "15m", "30m", "1h", "4h", "1d"]  # Add more valid intervals as needed
+        if self.config['time_interval'] not in valid_intervals:
+                logging.error(f"Invalid time interval: {self.config['time_interval']}")
+                raise ValueError(f"Invalid time interval: {self.config['time_interval']}")
+
+           # Validate leverage
+        if not (1 <= self.config['leverage'] <= 100):  # Assuming a valid range of 1 to 100 for leverage
+                logging.error(f"Invalid leverage value: {self.config['leverage']}")
+                raise ValueError(f"Invalid leverage value: {self.config['leverage']}")
