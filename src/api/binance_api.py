@@ -8,15 +8,14 @@ import ccxt
 import hmac
 import hashlib
 import time
-from src.initialize import initialize_app
+from src.utils.helpers import get_env_variable
 
-initialize_app()
 # Load environment variables from .env file
 load_dotenv()
 
 # Fetch API keys from environment variables
-API_KEY = os.getenv("BINANCE_API_KEY")
-API_SECRET = os.getenv("BINANCE_API_SECRET")
+API_KEY = get_env_variable("BINANCE_API_KEY")
+API_SECRET = get_env_variable("BINANCE_API_SECRET")
 
 async def fetch_data(url, headers):
     try:
