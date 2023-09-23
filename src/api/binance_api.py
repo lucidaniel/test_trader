@@ -5,6 +5,9 @@ import asyncio
 import os
 import pandas as pd
 import ccxt
+import hmac
+import hashlib
+import time
 from src.initialize import initialize_app
 
 initialize_app()
@@ -54,18 +57,27 @@ async def fetch_real_time_data(symbol, timeframe, limit):
 async def execute_trade(symbol, side, amount, price):
     try:
         url = f"https://api.binance.com/api/v3/order"
-        headers = {
-            'X-MBX-APIKEY': API_KEY,
-            # Add other necessary headers for authentication
-        }
+        
+        # Define the request parameters
         params = {
             'symbol': symbol,
             'side': side,
             'type': 'LIMIT',
             'timeInForce': 'GTC',
             'quantity': amount,
-            'price': price
+            'price': price,
+            'timestamp': int(time.time() * 1000)  # Binance requires timestamp in milliseconds
         }
+
+        # Generate the signature
+        params_string = '&'.join([f"{key}={value}" for key, value in params.items()])
+        signature = hmac.new(bytes(API_SECRET , 'latin-1'), msg = bytes(params_string , 'latin-1'), digestmod = hashlib.sha256).hexdigest()
+        params['signature'] = signature
+
+        headers = {
+            'X-MBX-APIKEY': API_KEY
+        }
+
         async with aiohttp.ClientSession() as session:
             async with session.post(url, headers=headers, params=params) as response:
                 order = await response.json()
