@@ -1,13 +1,14 @@
 import logging
 import os
-from dotenv import dotenv_values
+import dotenv
+
 
 def initialize_app():
     load_dotenv()
     setup_logging()
 
 def load_dotenv():
-    dotenv_values.load_dotenv()
+    dotenv.load_dotenv()
 
 def setup_logging(log_level=None, log_file=None):
     """
