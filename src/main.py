@@ -19,7 +19,7 @@ from typing import List, Dict
 initialize_app()
 
 # Load configuration
-config_file_path = os.path.join(get_env_variable('SCRIPT_LOCATION'), 'config', 'settings.yaml')
+config_file_path = os.path.join(os.path.dirname(__file__), '..', 'config', 'settings.yaml')
 config = ConfigManager(config_file_path).load_config()
 
 # Initialize Binance API

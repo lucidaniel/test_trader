@@ -1,6 +1,30 @@
 import joblib
 import pandas as pd
 from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.model_selection import train_test_split
+
+# Load your data
+data = pd.read_csv('path_to_your_new_data.csv')
+
+# Split data into features and labels
+X = data.drop('target_column', axis=1)
+y = data['target_column']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Initialize the model
+model = GradientBoostingClassifier()
+
+# Train the model
+model.fit(X_train, y_train)
+
+# Optionally, you can evaluate the model's performance on the test set
+accuracy = model.score(X_test, y_test)
+print(f"Model Accuracy: {accuracy * 100:.2f}%")
+
+# Save the updated model
+joblib.dump(model, 'models/gradient_boost_model.pkl')
 
 async def load_model(model_path="models/gradient_boost_model.pkl"):
     """
