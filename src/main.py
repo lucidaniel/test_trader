@@ -48,10 +48,12 @@ def initialize_binance_api(config):
             'apiKey': config['binance']['api_key'],
             'secret': config['binance']['api_secret']
         })
+    except ccxt.AuthenticationError as e:
+        logging.error(f"Authentication error while initializing Binance API: {e}")
+        raise
     except Exception as e:
         logging.error(f"Failed to initialize Binance API: {e}")
         raise
-binance = initialize_binance_api(config)
 
 # Function to fetch current price
 async def fetch_current_price(symbol):
@@ -63,18 +65,15 @@ async def analyze_symbol(symbol, timeframe='1m', limit=100):
     model = load_model(symbol)
     while True:
         try:
-            ohlcv = await fetch_real_time_data(symbol, timeframe, limit)
-            data = process_data(ohlcv)
-            prediction = make_prediction(model, data)
-            await execute_trade_based_on_prediction(prediction, symbol, data)
-        except KeyboardInterrupt:
-            logging.info("Stopping the bot.")
-            break
+            ...
         except ccxt.NetworkError as e:
             logging.error(f"Network error: {e}")
             await asyncio.sleep(60)
         except ccxt.ExchangeError as e:
             logging.error(f"Exchange error: {e}")
+            await asyncio.sleep(60)
+        except ccxt.AuthenticationError as e:
+            logging.error(f"Authentication error: {e}")
             await asyncio.sleep(60)
         except Exception as e:
             logging.error(f"An unexpected error occurred: {e}")
