@@ -33,7 +33,7 @@ def load_config(config_file_path):
     try:
         with open(config_file_path, 'r') as stream:
             return yaml.safe_load(stream)
-    except FileNotFoundError:
+    except FileNotFoundError as e:
         logging.error("settings.yaml not found.")
         raise
     except Exception as e:

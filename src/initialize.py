@@ -1,27 +1,17 @@
 import logging
 import os
-from dotenv import load_dotenv
+from dotenv import dotenv_values
 
-async def initialize_app():
-    """
-    Asynchronously initialize the application by loading environment variables and setting up logging.
-    """
-    await load_dotenv_async()
-    await setup_logging_async()
-
-async def load_dotenv_async():
-    """
-    Asynchronously load environment variables from the .env file.
-    """
+def initialize_app():
     load_dotenv()
+    setup_logging()
 
-async def setup_logging_async(log_level=None, log_file=None):
+def load_dotenv():
+    dotenv_values.load_dotenv()
+
+def setup_logging(log_level=None, log_file=None):
     """
-    Asynchronously setup logging for the application.
-    
-    Parameters:
-        log_level (str): The logging level. Default is fetched from .env.
-        log_file (str): The log file path. Default is fetched from .env.
+    Set up logging for the application.
     """
     log_level = log_level or os.getenv("LOG_LEVEL", "INFO")
     log_file = log_file or os.getenv("LOG_FILE", "logs/trading_bot.log")
