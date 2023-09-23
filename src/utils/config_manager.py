@@ -31,3 +31,9 @@ class ConfigManager:
                 logging.error(f"Missing '{section}' section in config.")
                 raise ValueError(f"Invalid configuration: Missing '{section}' section.")
         logging.info("Configuration validated successfully.")
+        # Validate trading pairs
+        valid_pairs = ['BTC/USDT', 'ETH/USDT', 'SOL/USDT']  # Add more valid pairs as needed
+        for pair in self.config['trading_pairs']:
+            if pair not in valid_pairs:
+                logging.error(f"Invalid trading pair: {pair}")
+                raise ValueError(f"Invalid trading pair: {pair}")
